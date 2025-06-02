@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HR Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f3f8fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(to right, #007991, #78ffd6);
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+    .dashboard {
+      
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+    .card {
+      background-color: white;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card button {
+      background: #007991;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .card button:hover {
+      background: #005f6b;
+    }
+    .logout-btn {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+    }
+    .logout-btn button {
+      background: #ff4d4d;
+      padding: 10px 30px;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .logout-btn button:hover {
+      background: #cc0000;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>HR Dashboard</h1>
+  <p>Welcome, HR Manager</p>
+</header>
+
+<div class="dashboard">
+  <div class="card">
+    <h3>View Employees</h3>
+    <p>Browse the employee records</p>
+    <button onclick="window.location.href='viewemp.html'">View Employees</button>
+
+  </div>
+  <div class="card">
+    <h3>Create Employee</h3>
+    <p>Add a new employee to the system</p>
+    <button onclick="window.location.href='hr1.html'">Create</button>
+  </div>
+  <div class="card">
+    <h3>Edit/Delete Employee</h3>
+    <p>Modify or remove employee records</p>
+    <button onclick="window.location.href='edit-delete-employee.html'">Manage</button>
+
+  </div>
+  <div class="card">
+    <h3>Leave Requests</h3>
+    <p>View and respond to leave applications</p>
+    <button onclick="window.location.href='leave-requests.html'">View Employees</button>
+  </div>
+  <!-- Add these inside the <div class="dashboard"> -->
+<div class="card">
+  <h3>Mark Attendance</h3>
+  <p>Record your daily attendance</p>
+  <button onclick="window.location.href='mark-attendancehr.html'">Mark</button>
+</div>
+
+<div class="card">
+  <h3>Apply Leave</h3>
+  <p>Submit a new leave request</p>
+  <button onclick="window.location.href='apply-leavehr.html'">Apply</button>
+</div>
+
+<div class="card">
+  <h3>My Profile</h3>
+  <p>View and update your profile</p>
+  <button onclick="window.location.href='hr-profile.html'">View Profile</button>
+</div>
+
+<div class="card">
+  <h3>Attendance Records</h3>
+  <p>Check your attendance history</p>
+  <button onclick="window.location.href='attendance-records.html'">View Records</button>
+</div>
+
+</div>
+
+<div class="logout-btn">
+  <button onclick="logout()">Logout</button>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+
+<script>
+  firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+      window.location.href = "hrlogin.html";
+    }
+  });
+
+  function logout() {
+    firebase.auth().signOut().then(() => {
+      window.location.href = "frontpage.html";
+    });
+  }
+</script>
+
+</body>
+</html>

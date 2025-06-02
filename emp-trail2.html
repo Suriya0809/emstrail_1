@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Employee Dashboard | Employee Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      padding: 20px;
+      color: #333;
+      position: relative;
+    }
+
+    .dashboard-container {
+      max-width: 800px;
+      margin: 100px auto 0 auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    header {
+      background-color: #2a5298;
+      color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .grid-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 25px;
+    }
+
+    .dashboard-button {
+      background: #f8f9fa;
+      border-radius: 14px;
+      padding: 25px 15px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .dashboard-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .dashboard-button h2 {
+      font-size: 20px;
+      color: #2a5298;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    footer {
+      background-color: #1e3c72;
+      color: #dee2e6;
+      text-align: center;
+      padding: 15px;
+      font-size: 13px;
+      margin-top: 40px;
+      border-radius: 10px;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ffffff;
+      color: #2a5298;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #f1f1f1;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Logout Button -->
+  <button class="logout-btn" onclick="logout()">🔒 Logout</button>
+
+  <div class="dashboard-container">
+
+    <!-- Header Section -->
+    <header>
+      <h1>Employee Dashboard</h1>
+      <p>Manage your daily activities</p>
+    </header>
+
+    <!-- Dashboard Options -->
+    <div class="grid-buttons">
+      <div class="dashboard-button" onclick="markAttendance()">
+        <h2>Mark Attendance</h2>
+      </div>
+      <div class="dashboard-button" onclick="applyLeave()">
+        <h2>Apply Leave</h2>
+      </div>
+      <div class="dashboard-button" onclick="viewProfile()">
+        <h2>View Profile</h2>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+      &copy; 2025 Employee Management System. All rights reserved.
+    </footer>
+
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDXTPYTrDM3ZloJrBGaoMOANClPEYNWTZQ",
+    authDomain: "employee-management-syst-990f5.firebaseapp.com",
+    projectId: "employee-management-syst-990f5",
+    storageBucket: "employee-management-syst-990f5.appspot.com",
+    messagingSenderId: "302985035923",
+    appId: "1:302985035923:web:8848684a54c5739b9b8d66"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+      window.location.href = "emplogintrail2.html";
+    }
+  });
+
+  function markAttendance() {
+    window.location.href = "attendence.html";
+  }
+
+  function applyLeave() {
+    // Redirect to apply leave page (if exists)
+    window.location.href = "leave-apply2.html"; // optional
+  }
+
+  function viewProfile() {
+    // Redirect to profile page (if exists)
+    window.location.href = "view-profile.html"; // optional
+  }
+
+  function logout() {
+    firebase.auth().signOut().then(() => {
+      window.location.href = "frontpage.html";
+    });
+  }
+</script>
+
+
+</body>
+</html>

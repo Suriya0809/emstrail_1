@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background-color: #e0e6ee; /* Lighter background for contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent scrollbar during animation */
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); /* More prominent shadow */
+            display: flex; /* This ensures horizontal layout by default */
+            width: 85%; /* Slightly wider */
+            max-width: 1050px;
+            overflow: hidden;
+            animation: fade-in 0.8s ease-out;
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Left Panel Styles - Dark Blue */
+        .left-panel {
+            background: linear-gradient(135deg, #0f1c3a, #1a2c5a); /* Deep, rich dark blue gradient */
+            color: #e0e6ee; /* Light text for contrast */
+            padding: 50px 40px; /* More padding */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 45%; /* Retain horizontal proportion */
+            position: relative;
+            overflow: hidden;
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+        .logo-section {
+            text-align: center;
+            opacity: 0;
+            animation: slide-up 0.9s 0.3s ease-out forwards;
+        }
+
+        @keyframes slide-up {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            width: 90px; /* Slightly larger logo */
+            height: 90px;
+            margin-bottom: 25px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1); /* Subtle background for logo */
+            padding: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-panel h1 {
+            font-size: 2.6em; /* Larger title */
+            font-weight: 700; /* Bolder */
+            margin-top: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            line-height: 1.2;
+            letter-spacing: 1px;
+            white-space: nowrap; /* Prevent line breaks within the system title */
+        }
+
+        /* Right Panel Styles */
+        .right-panel {
+            padding: 50px 40px; /* Match left panel padding */
+            width: 55%; /* Retain horizontal proportion */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-top-right-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .right-panel h2 {
+            color: #1a2c5a; /* Dark blue heading */
+            font-size: 2.8em; /* Larger heading */
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: slide-left 0.7s 0.2s ease-out forwards;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes slide-left {
+            0% { opacity: 0; transform: translateX(-30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* NEW OR MODIFIED STYLES FOR THE BLUR COVER / BUTTON CONTAINER */
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            width: 90%; /* Wider buttons */
+            max-width: 400px;
+            
+            /* ADDED STYLES FOR THE BACKGROUND BOX */
+            background-color: #1f3661; /* A dark blue for the background box */
+            padding: 35px 45px; /* Padding inside the box around the buttons */
+            border-radius: 15px; /* Rounded corners for the box */
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4), 0 8px 25px rgba(0, 0, 0, 0.25); /* Inner and outer shadow for depth */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle light border */
+            position: relative; /* Ensures z-index works correctly */
+            z-index: 1; /* Ensures it's layered correctly */
+        }
+
+        .login-btn {
+            background-color: #ffffff;
+            color: #3a6ba8; /* Medium blue for button text/border */
+            border: 2px solid #3a6ba8;
+            padding: 18px 30px; /* Larger buttons */
+            margin-bottom: 25px; /* More space between buttons */
+            border-radius: 10px; /* Slightly more rounded */
+            font-size: 1.2em; /* Larger font */
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease-in-out, box-shadow 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            opacity: 0;
+            text-align: center;
+            text-decoration: none; /* In case you make them actual links */
+            display: block; /* Ensures full width */
+        }
+
+        .login-btn:last-child {
+            margin-bottom: 0; /* Remove margin from the last button inside the box */
+        }
+
+        .login-btn:hover {
+            background-color: #3a6ba8; /* Darker blue on hover */
+            color: #ffffff;
+            transform: translateY(-3px); /* More pronounced lift */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* More prominent shadow on hover */
+        }
+
+        /* Individual button animations with slight delay */
+        .admin-btn { animation: fade-up 0.6s 0.4s ease-out forwards; }
+        .hr-btn { animation: fade-up 0.6s 0.55s ease-out forwards; }
+        .employee-btn { animation: fade-up 0.6s 0.7s ease-out forwards; }
+
+        @keyframes fade-up {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animated Shapes in background (Optional) */
+        .left-panel::before,
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3); /* Grey bubbles as per your previous request */
+            border-radius: 50%;
+            animation: expand-fade 4s infinite ease-out alternate;
+            z-index: 0;
+        }
+
+        .left-panel::before {
+            width: 180px;
+            height: 180px;
+            bottom: -70px;
+            left: -50px;
+            animation-delay: 0.5s;
+        }
+
+        .left-panel::after {
+            width: 250px;
+            height: 250px;
+            top: -100px;
+            right: -80px;
+            animation-delay: 1.2s;
+        }
+
+       @keyframes floating-bubbles {
+    0% { transform: scale(1) translateY(0); opacity: 0.7; }
+    50% { transform: scale(1.2) translateY(-20px); opacity: 0.5; }
+    100% { transform: scale(1) translateY(0); opacity: 0.7; }
+}
+
+
+        /* Adjusted for very small screens if content overflows, but prioritizes horizontal */
+        @media (max-width: 600px) {
+            .left-panel, .right-panel {
+                padding: 30px 20px;
+            }
+            .left-panel h1 {
+                font-size: 2.2em; /* Adjust font size slightly */
+                white-space: normal; /* Allow text to wrap if necessary on very small screens */
+            }
+            .right-panel h2 {
+                font-size: 2.3em;
+                margin-bottom: 30px;
+            }
+            .login-btn {
+                padding: 14px 20px;
+                font-size: 1em;
+            }
+            /* Adjust login-options for small screens if it becomes too wide */
+            .login-options {
+                padding: 25px 30px; /* Reduce padding for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo-section">
+                <img src="https://i.ibb.co/fYz117HN/IMG-20250531-201304.jpg" alt="EMS Logo" class="logo">
+                <h1>EMPLOYEE <br> MANAGEMENT <br> SYSTEM</h1>
+            </div>
+        </div>
+        <div class="right-panel">
+            <h2>LOGIN AS</h2>
+            <div class="login-options">
+                <button class="login-btn admin-btn" onclick="location.href='admin-login.html'">ADMIN</button>
+                <button class="login-btn hr-btn" onclick="location.href='hrlogin.html'">HR MANAGER</button>
+                <button class="login-btn employee-btn" onclick="location.href='emplogintrail2.html'">EMPLOYEES</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // No complex JS for animations needed for this design, as all animations are handled via CSS keyframes.
+        // You can add JS here for form validation, dynamic content, etc., if needed later.
+    </script>
+</body>
+</html>

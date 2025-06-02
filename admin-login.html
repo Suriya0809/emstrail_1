@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Login | Employee Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #e5e1eb, #673AB7); /* Consistent dark blue gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        /* Animation for the login container */
+        @keyframes login-fade-in-up {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-container {
+            background: rgba(30, 60, 114, 0.7); /* Darker, semi-transparent blue */
+            padding: 40px 30px;
+            border-radius: 15px;
+            width: 360px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: login-fade-in-up 0.8s ease-out forwards;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff; 
+        }
+
+        .login-container p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #e0e6ee; 
+            font-size: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #ffffff; 
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 22px;
+            border: none;
+            border-radius: 10px;
+            background: #ffffff; /* Solid white background for inputs */
+            font-size: 16px;
+            color: #333;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4), inset 0 2px 5px rgba(0, 0, 0, 0.1); 
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            /* ADMIN BUTTON COLOR: Deep Purple */
+            background-color: #673AB7; /* Deep Purple */
+            color: #fff; 
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            /* Darker shade of Deep Purple on hover */
+            background-color: #512DA8; 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .message {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .success {
+            color: #90ee90; 
+        }
+
+        .error {
+            color: #ff8c8c; 
+        }
+
+        .footer {
+            margin-top: 35px;
+            text-align: center;
+            font-size: 13px;
+            color: #c0c0c0; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Admin Login</h2>
+    <p>Access your dashboard securely</p>
+
+    <form id="loginForm">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter your Username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your Password" required>
+
+        <button type="submit">Login</button>
+        <div class="message" id="message"></div>
+    </form>
+
+    <div class="footer">
+        &copy; 2025 Employee Management System
+    </div>
+</div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const messageDiv = document.getElementById('message');
+
+    // Define the constant username and password
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'admin1234';
+
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (!username || !password) {
+            messageDiv.className = 'message error';
+            messageDiv.innerText = 'Please fill in both fields!';
+            return;
+        }
+
+        // Check against the constant credentials
+        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            messageDiv.className = 'message success';
+            messageDiv.innerText = 'Login successful! Redirecting to Admin Dashboard...';
+            setTimeout(() => {
+                // Redirect to your admin dashboard page
+                window.location.href = "admin1.html"; // IMPORTANT: Change this to your actual admin dashboard path
+            }, 2000);
+        } else {
+            messageDiv.className = 'message error';
+            messageDiv.innerText = 'Invalid username or password.';
+        }
+    });
+</script>
+</body>
+</html>

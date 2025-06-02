@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HR Attendance</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white shadow-2xl rounded-xl p-8 max-w-md w-full text-center">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">HR Attendance</h2>
+
+    <div id="statusMessage" class="mb-4 text-sm text-blue-600 font-medium"></div>
+
+    <div class="space-y-4">
+      <button id="markIn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-xl shadow">
+        Mark In
+      </button>
+      <button id="markOut" class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-xl shadow">
+        Mark Out
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+  apiKey: "AIzaSyDXTPYTrDM3ZloJrBGaoMOANClPEYNWTZQ",
+  authDomain: "employee-management-syst-990f5.firebaseapp.com",
+  databaseURL: "https://employee-management-syst-990f5-default-rtdb.firebaseio.com",
+  projectId: "employee-management-syst-990f5",
+  storageBucket: "employee-management-syst-990f5.appspot.com",
+  messagingSenderId: "302985035923",
+  appId: "1:302985035923:web:8848684a54c5739b9b8d66",
+  measurementId: "G-QRKEC2WXN8"
+};
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    const statusMessage = document.getElementById("statusMessage");
+
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        const uid = user.uid;
+        const today = new Date().toISOString().split("T")[0];
+        const attendanceRef = db.ref("attendance/" + uid + "/" + today);
+
+        // Mark In
+        document.getElementById("markIn").addEventListener("click", () => {
+          attendanceRef.once("value").then((snapshot) => {
+            if (snapshot.exists() && snapshot.val().in) {
+              statusMessage.textContent = "In-time already marked.";
+            } else {
+              const timeNow = new Date().toLocaleTimeString();
+              attendanceRef.update({ in: timeNow });
+              statusMessage.textContent = "In-time marked at " + timeNow;
+            }
+          });
+        });
+
+        // Mark Out
+        document.getElementById("markOut").addEventListener("click", () => {
+          attendanceRef.once("value").then((snapshot) => {
+            if (snapshot.exists() && snapshot.val().out) {
+              statusMessage.textContent = "Out-time already marked.";
+            } else {
+              const timeNow = new Date().toLocaleTimeString();
+              attendanceRef.update({ out: timeNow });
+              statusMessage.textContent = "Out-time marked at " + timeNow;
+            }
+          });
+        });
+
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HR Dashboard - Create Employee</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f3f5f7;
+      color: #333;
+    }
+
+    .navbar {
+      background-color: #1e3c72;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .container {
+      padding: 30px;
+      max-width: 500px;
+      margin: 30px auto;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #1e3c72;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #1e3c72;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #294f9e;
+    }
+
+    .message {
+      margin-top: 10px;
+      color: green;
+      text-align: center;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">HR Dashboard</div>
+
+  <div class="container">
+    <h2>Create Employee Account</h2>
+    <input type="text" id="empName" placeholder="Full Name" required />
+    <input type="email" id="empEmail" placeholder="Email" required />
+    <input type="password" id="empPassword" placeholder="Password" required />
+    <button onclick="createEmployee()">Create Employee</button>
+    <div class="message" id="statusMsg"></div>
+  </div>
+
+  <!-- Firebase Setup -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyDXTPYTrDM3ZloJrBGaoMOANClPEYNWTZQ",
+  authDomain: "employee-management-syst-990f5.firebaseapp.com",
+  databaseURL: "https://employee-management-syst-990f5-default-rtdb.firebaseio.com",
+  projectId: "employee-management-syst-990f5",
+  storageBucket: "employee-management-syst-990f5.firebasestorage.app",
+  messagingSenderId: "302985035923",
+  appId: "1:302985035923:web:8848684a54c5739b9b8d66",
+  measurementId: "G-QRKEC2WXN8"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+  </script>
+
+  <!-- Employee Creation Logic -->
+  <script>
+    function createEmployee() {
+      const name = document.getElementById("empName").value.trim();
+      const email = document.getElementById("empEmail").value.trim();
+      const password = document.getElementById("empPassword").value;
+
+      const statusMsg = document.getElementById("statusMsg");
+      statusMsg.textContent = "";
+
+      if (!name || !email || !password) {
+        statusMsg.textContent = "All fields are required.";
+        statusMsg.className = "message error";
+        return;
+      }
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const uid = userCredential.user.uid;
+          return firebase.database().ref("employees/" + uid).set({
+            name: name,
+            email: email,
+            createdAt: new Date().toISOString()
+          });
+        })
+        .then(() => {
+          statusMsg.textContent = "Employee account created successfully!";
+          statusMsg.className = "message";
+          document.getElementById("empName").value = "";
+          document.getElementById("empEmail").value = "";
+          document.getElementById("empPassword").value = "";
+        })
+        .catch((error) => {
+          statusMsg.textContent = "Error: " + error.message;
+          statusMsg.className = "message error";
+        });
+    }
+  </script>
+
+</body>
+</html>

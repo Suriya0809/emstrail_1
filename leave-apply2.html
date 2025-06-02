@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leave Application Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .form-container h2 {
+      margin-bottom: 30px;
+      color: #1A2980;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      transition: border 0.3s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #1A2980;
+      outline: none;
+      background-color: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      background-color: #1A2980;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #26D0CE;
+    }
+
+    #leaveMessage {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #statusTable {
+      margin-top: 30px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #statusTable th, #statusTable td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    #statusTable th {
+      background-color: #f0f4f8;
+      color: #1A2980;
+    }
+
+    #statusContainer {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Leave Application Form</h2>
+    <form id="leaveForm">
+      <label for="leaveType">Leave Type</label>
+      <select id="leaveType" required>
+        <option value="">Select Leave Type</option>
+        <option value="Sick Leave">Sick Leave</option>
+        <option value="Casual Leave">Casual Leave</option>
+        <option value="Annual Leave">Annual Leave</option>
+      </select>
+
+      <label for="startDate">Start Date</label>
+      <input type="date" id="startDate" required>
+
+      <label for="endDate">End Date</label>
+      <input type="date" id="endDate" required>
+
+      <label for="reason">Reason</label>
+      <textarea id="reason" required></textarea>
+
+      <button type="submit">Submit Leave Request</button>
+    </form>
+
+    <button onclick="checkLeaveStatus()">Check Leave Status</button>
+
+    <p id="leaveMessage"></p>
+
+    <div id="statusContainer"></div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDXTPYTrDM3ZloJrBGaoMOANClPEYNWTZQ",
+      authDomain: "employee-management-syst-990f5.firebaseapp.com",
+      databaseURL: "https://employee-management-syst-990f5-default-rtdb.firebaseio.com",
+      projectId: "employee-management-syst-990f5",
+      storageBucket: "employee-management-syst-990f5.appspot.com",
+      messagingSenderId: "302985035923",
+      appId: "1:302985035923:web:8848684a54c5739b9b8d66",
+      measurementId: "G-QRKEC2WXN8"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    let currentUserId = null;
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        currentUserId = user.uid;
+      } else {
+        firebase.auth().signInAnonymously()
+          .then(userCredential => {
+            currentUserId = userCredential.user.uid;
+          })
+          .catch(error => {
+            console.error("Login error:", error);
+          });
+      }
+    });
+
+    const leaveForm = document.getElementById('leaveForm');
+    const leaveMessage = document.getElementById('leaveMessage');
+    const statusContainer = document.getElementById('statusContainer');
+
+    leaveForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const leaveData = {
+        leaveType: document.getElementById('leaveType').value,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        reason: document.getElementById('reason').value,
+        status: 'Pending',
+        appliedOn: new Date().toISOString()
+      };
+
+      if (!currentUserId) {
+        leaveMessage.textContent = "Not logged in!";
+        leaveMessage.style.color = "red";
+        return;
+      }
+
+      firebase.database().ref(`employees/${currentUserId}/leaveApplications`).push(leaveData)
+        .then(() => {
+          leaveMessage.textContent = "Leave request submitted successfully!";
+          leaveMessage.style.color = "green";
+          leaveForm.reset();
+        })
+        .catch((error) => {
+          leaveMessage.textContent = "Error: " + error.message;
+          leaveMessage.style.color = "red";
+        });
+    });
+
+    function checkLeaveStatus() {
+      if (!currentUserId) {
+        statusContainer.innerHTML = "<p style='color:red;'>User not logged in.</p>";
+        return;
+      }
+
+      const ref = firebase.database().ref(`employees/${currentUserId}/leaveApplications`);
+      ref.once('value', snapshot => {
+        const data = snapshot.val();
+        if (!data) {
+          statusContainer.innerHTML = "<p>No leave applications found.</p>";
+          return;
+        }
+
+        let html = `
+          <table id="statusTable">
+            <tr>
+              <th>Leave Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
+            </tr>`;
+
+        Object.values(data).forEach(app => {
+          html += `
+            <tr>
+              <td>${app.leaveType}</td>
+              <td>${app.startDate}</td>
+              <td>${app.endDate}</td>
+              <td><strong>${app.status}</strong></td>
+            </tr>`;
+        });
+
+        html += `</table>`;
+        statusContainer.innerHTML = html;
+      });
+    }
+  </script>
+</body>
+</html>

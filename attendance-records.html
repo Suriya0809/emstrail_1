@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View Attendance Records</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+  <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-md p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center text-blue-600">Employee Attendance Records</h1>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-300">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-2 border">Employee Name</th>
+            <th class="px-4 py-2 border">Date</th>
+            <th class="px-4 py-2 border">Time In</th>
+            <th class="px-4 py-2 border">Time Out</th>
+            <th class="px-4 py-2 border">Status</th>
+          </tr>
+        </thead>
+        <tbody id="attendance-table-body" class="bg-white"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+  apiKey: "AIzaSyDXTPYTrDM3ZloJrBGaoMOANClPEYNWTZQ",
+  authDomain: "employee-management-syst-990f5.firebaseapp.com",
+  databaseURL: "https://employee-management-syst-990f5-default-rtdb.firebaseio.com",
+  projectId: "employee-management-syst-990f5",
+  storageBucket: "employee-management-syst-990f5.appspot.com",
+  messagingSenderId: "302985035923",
+  appId: "1:302985035923:web:8848684a54c5739b9b8d66",
+  measurementId: "G-QRKEC2WXN8"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    async function loadAttendanceRecords() {
+      const tbody = document.getElementById("attendance-table-body");
+      tbody.innerHTML = "";
+
+      // Get employee names first
+      const empSnapshot = await db.ref("employees").once("value");
+      const employeeNames = {};
+      empSnapshot.forEach((empSnap) => {
+        employeeNames[empSnap.key] = empSnap.val().name || empSnap.key;
+      });
+
+      // Get attendance data
+      const attendanceSnapshot = await db.ref("attendance").once("value");
+      attendanceSnapshot.forEach((userSnap) => {
+        const userId = userSnap.key;
+        const empName = employeeNames[userId] || userId;
+
+        userSnap.forEach((dateSnap) => {
+          const date = dateSnap.key;
+          const data = dateSnap.val();
+          const timeIn = data.in || "—";
+          const timeOut = data.out || "—";
+
+          let status = "Present";
+          if (!data.in && !data.out) status = "Absent";
+          else if (data.in && !data.out) status = "Missing Out";
+
+          const row = `
+            <tr class="text-center border-t">
+              <td class="px-4 py-2 border">${empName}</td>
+              <td class="px-4 py-2 border">${date}</td>
+              <td class="px-4 py-2 border">${timeIn}</td>
+              <td class="px-4 py-2 border">${timeOut}</td>
+              <td class="px-4 py-2 border text-sm text-gray-700">${status}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      });
+    }
+
+    window.onload = loadAttendanceRecords;
+  </script>
+</body>
+</html>
